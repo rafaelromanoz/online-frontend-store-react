@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { getProductsFromCategoryAndQuery } from '../services/api';
+import FormAssessment from './FormAssessment';
+import AllAssessments from './AllAssessments';
 
 export default class ProductDetails extends Component {
   constructor() {
@@ -9,9 +11,11 @@ export default class ProductDetails extends Component {
 
     this.state = {
       product: '',
+      AllComments: [],
     };
 
     this.handleState = this.handleState.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   async componentDidMount() {
@@ -29,6 +33,12 @@ export default class ProductDetails extends Component {
     localStorage.setItem('productList', JSON.stringify(shoppingCartList));
   }
 
+  handleClick(state) {
+    this.setState((prevValue) => ({
+      AllComments: ([...prevValue.AllComments, state]),
+    }));
+  }
+
   async requestProductApi() {
     const { match } = this.props;
     const url = `https://api.mercadolibre.com/items/${match.params.id}`;
@@ -39,6 +49,7 @@ export default class ProductDetails extends Component {
 
   render() {
     const { product } = this.state;
+    const { match } = this.props;
     if (!localStorage.getItem('productList')) localStorage.setItem('productList', '[]');
     return (
       <div>
@@ -68,6 +79,8 @@ export default class ProductDetails extends Component {
         <Link to="/shoppingcart" data-testid="shopping-cart-button">
           Carrinho
         </Link>
+        <FormAssessment id={ match } handleClick={ this.handleClick } />
+        <AllAssessments id={ match } />
       </div>
     );
   }
