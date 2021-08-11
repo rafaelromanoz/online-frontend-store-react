@@ -26,7 +26,7 @@ export default class ShoppingCart extends Component {
   calculateTotal = () => {
     const { products } = this.state;
     const newTotal = products.reduce((acumulator, current) => (
-      current.quantity * current.price
+      acumulator + current.quantity * current.price
     ), 0);
     return newTotal;
   }
