@@ -11,18 +11,26 @@ export default class ProductInCart extends React.Component {
     };
   }
 
-  handleClickMore = () => {
-    this.setState((prevValue) => ({
+  handleClickMore = async () => {
+    const { handleChange, index } = this.props;
+    await this.setState((prevValue) => ({
       quantity: prevValue.quantity === prevValue.maxQuantity
         ? prevValue.maxQuantity
         : prevValue.quantity + 1,
     }));
+    const { quantity } = this.state;
+    console.log(quantity);
+    handleChange(quantity, index);
   }
 
-  handleClickLess = () => {
-    this.setState((prevValue) => ({
+  handleClickLess = async () => {
+    const { handleChange, index } = this.props;
+    await this.setState((prevValue) => ({
       quantity: prevValue.quantity === 1 ? 1 : prevValue.quantity - 1,
     }));
+    const { quantity } = this.state;
+    console.log(quantity);
+    handleChange(quantity, index);
   }
 
   render() {
@@ -35,7 +43,6 @@ export default class ProductInCart extends React.Component {
           Quantidade:
           <span data-testid="shopping-cart-product-quantity">{quantity}</span>
         </product>
-        <span>{product.price * quantity}</span>
         <button
           data-testid="product-increase-quantity"
           type="button"
@@ -50,6 +57,8 @@ export default class ProductInCart extends React.Component {
         >
           -
         </button>
+        <br />
+        <span>{product.price * quantity}</span>
       </div>
     );
   }
@@ -57,4 +66,6 @@ export default class ProductInCart extends React.Component {
 
 ProductInCart.propTypes = {
   product: PropTypes.objectOf().isRequired,
+  index: PropTypes.number.isRequired,
+  handleChange: PropTypes.func.isRequired,
 };
