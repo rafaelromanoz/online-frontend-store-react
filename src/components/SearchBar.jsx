@@ -8,9 +8,11 @@ const api = require('../services/api');
 export default class SearchBar extends Component {
   constructor(props) {
     super(props);
+    const amountProductsInCart = JSON.parse(localStorage.getItem('amountProductsInCart'));
     this.state = {
       searchText: '',
       products: [],
+      amountProductsInCart,
     };
 
     this.handleChangeCategory = this.handleChangeCategory.bind(this);
@@ -22,6 +24,13 @@ export default class SearchBar extends Component {
   // }
 
   // updateState = (products) => this.setState({ products: products.results });
+
+  handleChangeQuantityInCart = () => {
+    const { amountProductsInCart } = this.state;
+    const newQuantity = amountProductsInCart + 1;
+    this.setState({ amountProductsInCart: newQuantity });
+    localStorage.setItem('amountProductsInCart', JSON.stringify(newQuantity));
+  }
 
   handleClick = () => {
     const { searchText } = this.state;
@@ -43,7 +52,10 @@ export default class SearchBar extends Component {
   }
 
   render() {
-    const { searchText, products } = this.state;
+    const { searchText, products, amountProductsInCart } = this.state;
+    if (!localStorage.getItem('amountProductsInCart')) {
+      localStorage.setItem('amountProductsInCart', '0');
+    }
     return (
       <main>
         <label htmlFor="input-search-bar">
@@ -69,8 +81,12 @@ export default class SearchBar extends Component {
         <Link to="shoppingcart" data-testid="shopping-cart-button">
           Carrinho
         </Link>
+        <span data-testid="shopping-cart-size">{amountProductsInCart}</span>
         <Category onChange={ this.handleChangeCategory } />
-        <RenderCard products={ products } />
+        <RenderCard
+          products={ products }
+          handleChangeQuantityInCart={ this.handleChangeQuantityInCart }
+        />
       </main>
     );
   }

@@ -9,13 +9,16 @@ export default class ProductDetails extends Component {
   constructor() {
     super();
 
+    const amountProductsInCart = JSON.parse(localStorage.getItem('amountProductsInCart'));
     this.state = {
       product: '',
       AllComments: [],
+      amountProductsInCart,
     };
 
     this.handleState = this.handleState.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.handleCartClick = this.handleCartClick.bind(this);
   }
 
   async componentDidMount() {
@@ -31,6 +34,10 @@ export default class ProductDetails extends Component {
     const shoppingCartList = JSON.parse(localStorage.getItem('productList'));
     shoppingCartList.push(target.name);
     localStorage.setItem('productList', JSON.stringify(shoppingCartList));
+    const { amountProductsInCart } = this.state;
+    const newQuantity = amountProductsInCart + 1;
+    this.setState({ amountProductsInCart: newQuantity });
+    localStorage.setItem('amountProductsInCart', JSON.stringify(newQuantity));
   }
 
   handleClick(state) {
@@ -48,7 +55,7 @@ export default class ProductDetails extends Component {
   }
 
   render() {
-    const { product } = this.state;
+    const { product, amountProductsInCart } = this.state;
     const { match } = this.props;
     if (!localStorage.getItem('productList')) localStorage.setItem('productList', '[]');
     return (
@@ -79,6 +86,7 @@ export default class ProductDetails extends Component {
         <Link to="/shoppingcart" data-testid="shopping-cart-button">
           Carrinho
         </Link>
+        <span data-testid="shopping-cart-size">{amountProductsInCart}</span>
         <FormAssessment id={ match } handleClick={ this.handleClick } />
         <AllAssessments id={ match } />
       </div>

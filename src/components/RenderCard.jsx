@@ -11,7 +11,7 @@ export default class RenderCard extends Component {
   }
 
   render() {
-    const { products } = this.props;
+    const { products, handleChangeQuantityInCart } = this.props;
     if (!localStorage.getItem('productList')) localStorage.setItem('productList', '[]');
     return (
       <div>
@@ -25,12 +25,13 @@ export default class RenderCard extends Component {
               <img src={ product.thumbnail } alt="" />
               <p>{product.price}</p>
             </Link>
-            {product.shipping.free_shipping === true
-              ? <p data-testid="free-shipping">Frete Grátis</p> : false}
             <button
               type="button"
               data-testid="product-add-to-cart"
-              onClick={ this.handleCartClick }
+              onClick={ (element) => {
+                handleChangeQuantityInCart();
+                this.handleCartClick(element);
+              } }
               name={ JSON.stringify(product) }
             >
               Adcionar ao Carrinho
@@ -44,4 +45,5 @@ export default class RenderCard extends Component {
 
 RenderCard.propTypes = {
   products: PropTypes.arrayOf().isRequired,
+  handleChangeQuantityInCart: PropTypes.func.isRequired,
 };
