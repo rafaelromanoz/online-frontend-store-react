@@ -25,6 +25,8 @@ export default class RenderCard extends Component {
               <img src={ product.thumbnail } alt="" />
               <p>{product.price}</p>
             </Link>
+            {product.shipping.free_shipping === true
+              ? <p data-testid="free-shipping">Frete Grátis</p> : false}
             <button
               type="button"
               data-testid="product-add-to-cart"
